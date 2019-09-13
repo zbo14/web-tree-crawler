@@ -7,7 +7,7 @@ const crawl = require('../lib')
 const writeFile = promisify(fs.writeFile)
 
 const usage = [
-  'Usage: [OPTIONS=] web-tree-crawl URL\n',
+  'Usage: [OPTIONS=] web-tree-crawler URL\n',
   'Options:',
   '  BATCH_SIZE   The number of requests to send at a time (default=200)',
   '  OUTFILE      Write the tree to file instead of stdout',

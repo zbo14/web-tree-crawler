@@ -1,4 +1,4 @@
-# web-tree-crawl
+# web-tree-crawler
 
 A naive web crawler that builds a tree of URLs using [web-tree](https://github.com/zbo14/web-tree).
 
@@ -6,7 +6,7 @@ A naive web crawler that builds a tree of URLs using [web-tree](https://github.c
 
 ## Install
 
-`npm i [-g] web-tree-crawl`
+`npm i [-g] web-tree-crawler`
 
 
 ## JS
@@ -37,7 +37,7 @@ const crawl = async (url, opts = {}) => {
 ```js
 'use strict'
 
-const crawl = require('web-tree-crawl')
+const crawl = require('web-tree-crawler')
 
 crawl(url, opts)
   .then(tree => { ... })
@@ -49,7 +49,7 @@ crawl(url, opts)
 ### Usage
 
 ```
-Usage: [OPTION=] web-tree-crawl URL
+Usage: [OPTION=] web-tree-crawler URL
 
 Options:
   BATCH_SIZE    The number of requests to send at a time (default=200)
@@ -62,7 +62,7 @@ Options:
 #### Crawl and print tree to stdout
 
 ```
-$ web-tree-crawl URL
+$ web-tree-crawler URL
 
 .com
   .domain
@@ -79,7 +79,7 @@ $ web-tree-crawl URL
 #### Crawl and write tree to file
 
 ```
-$ OUTFILE=/path/to/file web-tree-crawl URL
+$ OUTFILE=/path/to/file web-tree-crawler URL
 
 Wrote tree to file!
 ```
@@ -102,6 +102,6 @@ Generate the docs and open in browser.
 
 Please do!
 
-If you find a bug, want a feature added, or just have a question, feel free to [open an issue](https://github.com/zbo14/web-tree-crawl/issues/new). In addition, you're welcome to [create a pull request](https://github.com/zbo14/web-tree-crawl/compare/develop...) addressing an issue. You should push your changes to a feature branch and request merge to `develop`.
+If you find a bug, want a feature added, or just have a question, feel free to [open an issue](https://github.com/zbo14/web-tree-crawler/issues/new). In addition, you're welcome to [create a pull request](https://github.com/zbo14/web-tree-crawler/compare/develop...) addressing an issue. You should push your changes to a feature branch and request merge to `develop`.
 
 Make sure linting and tests pass and coverage is 💯 before creating a pull request!
