@@ -1,0 +1,7 @@
+{
+  "extends": "standard",
+  "root": true,
+  "rules": {
+    "no-unmodified-loop-condition": "off"
+  }
+}
