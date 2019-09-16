@@ -22,6 +22,7 @@ describe('bin/run', () => {
       'Usage: [OPTIONS=] web-tree-crawler URL\n',
       'Options:',
       '  BATCH_SIZE   The number of requests to send at a time (default=200)',
+      '  HEADERS',
       '  OUTFILE      Write the tree to file instead of stdout',
       '  TIME_LIMIT   The max number of seconds to run (default=120)'
     ].join('\n'))
@@ -33,6 +34,15 @@ describe('bin/run', () => {
       assert.fail('Should reject')
     } catch ({ message }) {
       assert.strictEqual(message, 'Invalid URL: foo.com')
+    }
+  })
+
+  it('rejects if headers invalid', async () => {
+    try {
+      await this.run('https://foo.com', { headers: '{}}' })
+      assert.fail('Should reject')
+    } catch ({ message }) {
+      assert.strictEqual(message, 'Invalid headers')
     }
   })
 

@@ -6,10 +6,11 @@ const run = require('./run')
 
 const url = process.argv[2]
 const batchSize = +process.env.BATCH_SIZE
+const headers = process.env.HEADERS
 const outfile = process.env.OUTFILE
 const timeLimit = +process.env.TIME_LIMIT
 
-run(url, { batchSize, outfile, timeLimit })
+run(url, { batchSize, headers, outfile, timeLimit })
   .then(console.log)
   .catch(err => console.error(err.message) || 1)
   .then(process.exit)

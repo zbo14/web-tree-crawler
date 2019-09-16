@@ -10,6 +10,7 @@ const usage = [
   'Usage: [OPTIONS=] web-tree-crawler URL\n',
   'Options:',
   '  BATCH_SIZE   The number of requests to send at a time (default=200)',
+  '  HEADERS',
   '  OUTFILE      Write the tree to file instead of stdout',
   '  TIME_LIMIT   The max number of seconds to run (default=120)'
 ].join('\n')
@@ -22,15 +23,21 @@ const startPaths = [
 
 module.exports = async (url, {
   batchSize,
-  entryPoints,
+  headers,
   outfile,
   timeLimit
 } = {}) => {
   if (!url) return usage
 
+  try {
+    headers = headers && JSON.parse(headers)
+  } catch (_) {
+    throw new Error('Invalid headers')
+  }
+
   const result = await crawl(url, {
     batchSize,
-    entryPoints,
+    headers,
     startPaths,
     stringify: true,
     timeLimit
