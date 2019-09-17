@@ -20,6 +20,7 @@ A naive web crawler that builds a tree of URLs using [web-tree](https://github.c
  * @param  {String}   url
  * @param  {Object}   [opts = {}]
  * @param  {Number}   [opts.batchSize = 200] - the number of requests to send at a time
+ * @param  {Object}   [opts.headers]         - headers to send with each request
  * @param  {String[]} [opts.startPaths]      - paths to initially crawl
  * @param  {Boolean}  [opts.stringify]       - stringify the tree
  * @param  {Number}   [opts.timeLimit = 120] - the max number of seconds to run for
@@ -53,6 +54,8 @@ Usage: [OPTION=] web-tree-crawler URL
 
 Options:
   BATCH_SIZE    The number of requests to send at a time (default=200)
+  COOKIES       Cookies to send with each request
+  HEADERS       Headers to send with each request
   OUTFILE       Write the result to file instead of stdout
   TIME_LIMIT    The max number of seconds to run (default=120)
 ```
@@ -62,7 +65,7 @@ Options:
 #### Crawl and print tree to stdout
 
 ```
-$ web-tree-crawler URL
+$ COOKIES="chocolate=chip" web-tree-crawler URL
 
 .com
   .domain
@@ -79,7 +82,7 @@ $ web-tree-crawler URL
 #### Crawl and write tree to file
 
 ```
-$ OUTFILE=/path/to/file web-tree-crawler URL
+$ HEADERS="x-foo: bar" OUTFILE=/path/to/file web-tree-crawler URL
 
 Wrote tree to file!
 ```
