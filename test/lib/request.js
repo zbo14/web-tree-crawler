@@ -99,7 +99,7 @@ const testSuite = protocol => {
       const clock = sinon.useFakeTimers()
       const promise = request(protocol + '://localhost:8080', { rejectUnauthorized: false })
 
-      clock.tick(5e3)
+      clock.tick(3e3)
       clock.restore()
 
       try {

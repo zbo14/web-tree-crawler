@@ -22,7 +22,8 @@ describe('bin/run', () => {
       'Usage: [OPTIONS=] web-tree-crawler URL\n',
       'Options:',
       '  BATCH_SIZE   The number of requests to send at a time (default=200)',
-      '  HEADERS',
+      '  COOKIES      Cookies to send with each request',
+      '  HEADERS      Headers to send with each request',
       '  OUTFILE      Write the tree to file instead of stdout',
       '  TIME_LIMIT   The max number of seconds to run (default=120)'
     ].join('\n'))
@@ -37,17 +38,8 @@ describe('bin/run', () => {
     }
   })
 
-  it('rejects if headers invalid', async () => {
-    try {
-      await this.run('https://foo.com', { headers: '{}}' })
-      assert.fail('Should reject')
-    } catch ({ message }) {
-      assert.strictEqual(message, 'Invalid headers')
-    }
-  })
-
   it('resolves tree', async () => {
-    const crawl = sinon.spy(async (url, opts) => 'tree')
+    const crawl = sinon.stub().resolves('tree')
 
     this.run.__set__('crawl', crawl)
 
@@ -56,8 +48,99 @@ describe('bin/run', () => {
     assert.strictEqual(tree, 'tree')
   })
 
+  it('processes headers', async () => {
+    const crawl = sinon.stub().resolves('tree')
+
+    this.run.__set__('crawl', crawl)
+
+    const tree = await this.run('https://foo.com', { headers: 'x-foo: bar, x-baz: zab' })
+
+    assert.strictEqual(tree, 'tree')
+
+    sinon.assert.calledWithExactly(crawl, 'https://foo.com', {
+      batchSize: undefined,
+      headers: { 'x-foo': 'bar', 'x-baz': 'zab' },
+      startPaths: [
+        'crossdomain.xml',
+        'robots.txt',
+        'sitemap.xml'
+      ],
+      stringify: true,
+      timeLimit: undefined
+    })
+  })
+
+  it('doesn\'t process incomplete header', async () => {
+    const crawl = sinon.stub().resolves('tree')
+
+    this.run.__set__('crawl', crawl)
+
+    const tree = await this.run('https://foo.com', { headers: 'x-foo:' })
+
+    assert.strictEqual(tree, 'tree')
+
+    sinon.assert.calledWithExactly(crawl, 'https://foo.com', {
+      batchSize: undefined,
+      headers: {},
+      startPaths: [
+        'crossdomain.xml',
+        'robots.txt',
+        'sitemap.xml'
+      ],
+      stringify: true,
+      timeLimit: undefined
+    })
+  })
+
+  it('process cookies', async () => {
+    const crawl = sinon.stub().resolves('tree')
+
+    this.run.__set__('crawl', crawl)
+
+    const tree = await this.run('https://foo.com', { cookies: 'chocolate=chip; oatmeal=raisin' })
+
+    assert.strictEqual(tree, 'tree')
+
+    sinon.assert.calledWithExactly(crawl, 'https://foo.com', {
+      batchSize: undefined,
+      headers: { cookie: ['chocolate=chip', 'oatmeal=raisin'] },
+      startPaths: [
+        'crossdomain.xml',
+        'robots.txt',
+        'sitemap.xml'
+      ],
+      stringify: true,
+      timeLimit: undefined
+    })
+  })
+
+  it('process cookies and headers', async () => {
+    const crawl = sinon.stub().resolves('tree')
+
+    this.run.__set__('crawl', crawl)
+
+    const tree = await this.run('https://foo.com', {
+      cookies: 'chocolate=chip',
+      headers: 'Cookie: oatmeal=raisin'
+    })
+
+    assert.strictEqual(tree, 'tree')
+
+    sinon.assert.calledWithExactly(crawl, 'https://foo.com', {
+      batchSize: undefined,
+      headers: { cookie: ['chocolate=chip'] },
+      startPaths: [
+        'crossdomain.xml',
+        'robots.txt',
+        'sitemap.xml'
+      ],
+      stringify: true,
+      timeLimit: undefined
+    })
+  })
+
   it('writes tree to file and resolves success message', async () => {
-    const crawl = sinon.spy(async (url, opts) => 'tree')
+    const crawl = sinon.stub().resolves('tree')
 
     this.run.__set__('crawl', crawl)
 
