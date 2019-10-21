@@ -1,13 +1,12 @@
 # web-tree-crawler
 
-A naive web crawler that builds a tree of URLs using [web-tree](https://github.com/zbo14/web-tree).
+A naive web crawler that builds a tree of URLs using [web-tree](https://www.npmjs.com/package/web-tree).
 
 **Note:** This software is intended for personal learning and testing purposes.
 
 ## Install
 
-`npm i [-g] web-tree-crawler`
-
+`npm i web-tree-crawler`
 
 ## JS
 
@@ -24,6 +23,7 @@ A naive web crawler that builds a tree of URLs using [web-tree](https://github.c
  * @param  {String[]} [opts.startPaths]      - paths to initially crawl
  * @param  {Boolean}  [opts.stringify]       - stringify the tree
  * @param  {Number}   [opts.timeLimit = 120] - the max number of seconds to run for
+ * @param  {Boolean}  [opts.verbose]         - if true, logs info and progress to stdout
  * @param  {}         [opts....]             - additional options for #lib.request()
  *
  * @return {Promise}
@@ -50,14 +50,16 @@ crawl(url, opts)
 ### Usage
 
 ```
-Usage: [OPTION=] web-tree-crawler URL
+Usage: [option=] web-tree-crawler <url>
 
 Options:
-  BATCH_SIZE    The number of requests to send at a time (default=200)
-  COOKIES       Cookies to send with each request
-  HEADERS       Headers to send with each request
-  OUTFILE       Write the result to file instead of stdout
-  TIME_LIMIT    The max number of seconds to run (default=120)
+  batchSize, b  The number of requests to send at a time (default=200)
+  cookies  , c  Cookies to send with each request
+  headers  , h  Headers to send with each request
+  outFile  , o  Write the tree to file instead of stdout
+  pathList , p  File containing paths to initially crawl
+  timeLimit, t  The max number of seconds to run (default=120)
+  verbose  , v  Log info and progress to stdout
 ```
 
 ### Examples
@@ -65,7 +67,7 @@ Options:
 #### Crawl and print tree to stdout
 
 ```
-$ COOKIES="chocolate=chip" web-tree-crawler URL
+$ cookies="chocolate=chip" web-tree-crawler <url>
 
 .com
   .domain
@@ -82,7 +84,7 @@ $ COOKIES="chocolate=chip" web-tree-crawler URL
 #### Crawl and write tree to file
 
 ```
-$ HEADERS="x-foo: bar" OUTFILE=/path/to/file web-tree-crawler URL
+$ headers="x-foo: bar" outFile=/path/to/file web-tree-crawler <url>
 
 Wrote tree to file!
 ```

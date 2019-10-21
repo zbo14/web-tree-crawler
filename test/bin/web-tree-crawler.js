@@ -15,7 +15,7 @@ describe('bin/web-tree-crawler', () => {
     const result = await this.crawler()
 
     assert.strictEqual(result, [
-      'Usage: [OPTIONS=] web-tree-crawler URL\n',
+      'Usage: [option=] web-tree-crawler <url>\n',
       'Options:',
       '  batchSize, b  The number of requests to send at a time (default=200)',
       '  cookies  , c  Cookies to send with each request',
@@ -118,7 +118,7 @@ describe('bin/web-tree-crawler', () => {
     sinon.assert.calledWithExactly(crawl, 'https://foo.com', {
       batchSize: undefined,
       headers: { cookie: ['chocolate=chip'] },
-      startPaths: ['robots.txt','sitemap.xml'],
+      startPaths: ['robots.txt', 'sitemap.xml'],
       stringify: true,
       timeLimit: undefined,
       verbose: undefined
@@ -138,7 +138,7 @@ describe('bin/web-tree-crawler', () => {
     sinon.assert.calledWithExactly(crawl, 'https://foo.com', {
       batchSize: undefined,
       headers: undefined,
-      startPaths: ['foo','bar', 'baz'],
+      startPaths: ['foo', 'bar', 'baz'],
       stringify: true,
       timeLimit: undefined,
       verbose: undefined

@@ -4,7 +4,7 @@ const fs = require('fs').promises
 const crawl = require('../lib')
 
 const usage = [
-  'Usage: [OPTIONS=] web-tree-crawler URL\n',
+  'Usage: [option=] web-tree-crawler <url>\n',
   'Options:',
   '  batchSize, b  The number of requests to send at a time (default=200)',
   '  cookies  , c  Cookies to send with each request',
