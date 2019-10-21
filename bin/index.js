@@ -20,7 +20,7 @@ crawler(url, {
   cookies,
   headers,
   outFile,
-  pathList
+  pathList,
   timeLimit,
   verbose
 }).then(console.log)

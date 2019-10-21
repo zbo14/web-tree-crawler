@@ -6,13 +6,13 @@ const crawl = require('../lib')
 const usage = [
   'Usage: [OPTIONS=] web-tree-crawler URL\n',
   'Options:',
-  '  batchSize , b   The number of requests to send at a time (default=200)',
-  '  cookies   , c   Cookies to send with each request',
-  '  headers   , h   Headers to send with each request',
-  '  outFile   , o   Write the tree to file instead of stdout',
-  '  pathList  , p   File containing paths to initially crawl',
-  '  timeLimit , t   The max number of seconds to run (default=120)',
-  '  verbose   , v   Log info and progress to stdout'
+  '  batchSize, b  The number of requests to send at a time (default=200)',
+  '  cookies  , c  Cookies to send with each request',
+  '  headers  , h  Headers to send with each request',
+  '  outFile  , o  Write the tree to file instead of stdout',
+  '  pathList , p  File containing paths to initially crawl',
+  '  timeLimit, t  The max number of seconds to run (default=120)',
+  '  verbose  , v  Log info and progress to stdout'
 ].join('\n')
 
 module.exports = async (url, {
