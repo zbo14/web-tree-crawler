@@ -43,12 +43,13 @@ describe('lib/util', () => {
 
   describe('#getOpts()', () => {
     it('gets specified opts', () => {
-      const result = util.getOpts({ batchSize: 1e3, startPaths: ['foo', 'bar'], timeLimit: 240 })
+      const result = util.getOpts({ batchSize: 1e3, startPaths: ['foo', 'bar'], timeLimit: 240, verbose: true })
 
       assert.deepStrictEqual(result, {
         batchSize: 1e3,
         startPaths: ['foo', 'bar'],
-        timeLimit: 240
+        timeLimit: 240,
+        verbose: true
       })
     })
 
@@ -58,7 +59,8 @@ describe('lib/util', () => {
       assert.deepStrictEqual(result, {
         batchSize: 200,
         startPaths: [],
-        timeLimit: 120
+        timeLimit: 120,
+        verbose: false
       })
     })
   })
