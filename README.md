@@ -18,19 +18,16 @@ A naive web crawler that builds a tree of URLs using [web-tree](https://www.npmj
  *
  * @param  {String}   url
  * @param  {Object}   [opts = {}]
- * @param  {Number}   [opts.batchSize = 200] - the number of requests to send at a time
- * @param  {Object}   [opts.headers]         - headers to send with each request
- * @param  {String[]} [opts.startPaths]      - paths to initially crawl
- * @param  {Boolean}  [opts.stringify]       - stringify the tree
- * @param  {Number}   [opts.timeLimit = 120] - the max number of seconds to run for
- * @param  {Boolean}  [opts.verbose]         - if true, logs info and progress to stdout
- * @param  {}         [opts....]             - additional options for #lib.request()
+ * @param  {Object}   [opts.headers]           - headers to send with each request
+ * @param  {Number}   [opts.numRequests = 200] - the number of requests to send at a time
+ * @param  {String[]} [opts.startPaths]        - paths to initially crawl
+ * @param  {Boolean}  [opts.stringify]         - stringify the tree
+ * @param  {Number}   [opts.timeLimit = 120]   - the max number of seconds to run for
+ * @param  {Boolean}  [opts.verbose]           - if true, logs info and progress to stdout
+ * @param  {}         [opts....]               - additional options for #lib.request()
  *
  * @return {Promise}
  */
-const crawl = async (url, opts = {}) => {
-  ...
-}
 ```
 
 ### Example
@@ -53,13 +50,13 @@ crawl(url, opts)
 Usage: [option=] web-tree-crawler <url>
 
 Options:
-  batchSize, b  The number of requests to send at a time (default=200)
-  cookies  , c  Cookies to send with each request
-  headers  , h  Headers to send with each request
-  outFile  , o  Write the tree to file instead of stdout
-  pathList , p  File containing paths to initially crawl
-  timeLimit, t  The max number of seconds to run (default=120)
-  verbose  , v  Log info and progress to stdout
+  cookies    , c  Cookies to send with each request
+  headers    , h  Headers to send with each request
+  numRequests, n  The number of requests to send at a time (default=200)
+  outFile    , o  Write the tree to file instead of stdout
+  pathList   , p  File containing paths to initially crawl
+  timeLimit  , t  The max number of seconds to run (default=120)
+  verbose    , v  Log info and progress to stdout
 ```
 
 ### Examples

@@ -7,18 +7,18 @@ const crawler = require('./web-tree-crawler')
 const url = process.argv[2]
 
 const { env } = process
-const batchSize = +(env.batchSize || env.b)
 const cookies = env.cookies || env.c
 const headers = env.headers || env.h
+const numRequests = +(env.numRequests || env.n)
 const outFile = env.outFile || env.o
 const pathList = env.pathList || env.p
 const timeLimit = +env.timeLimit || env.t
 const verbose = (env.verbose || env.v || '').trim() === 'true'
 
 crawler(url, {
-  batchSize,
   cookies,
   headers,
+  numRequests,
   outFile,
   pathList,
   timeLimit,
