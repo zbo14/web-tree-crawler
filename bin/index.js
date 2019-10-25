@@ -12,7 +12,7 @@ const headers = env.headers || env.h
 const numRequests = +(env.numRequests || env.n)
 const outFile = env.outFile || env.o
 const pathList = env.pathList || env.p
-const timeLimit = +env.timeLimit || env.t
+const timeLimit = +(env.timeLimit || env.t)
 const verbose = (env.verbose || env.v || '').trim() === 'true'
 
 crawler(url, {
