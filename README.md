@@ -8,6 +8,68 @@ A naive web crawler that builds a tree of URLs using [web-tree](https://www.npmj
 
 `npm i web-tree-crawler`
 
+## CLI
+
+### Usage
+
+```
+Usage: [option=] web-tree-crawler <url>
+
+Options:
+  format     , f  The output format of the tree (default="string")
+  headers    , h  File containing headers to send with each request
+  numRequests, n  The number of requests to send at a time (default=200)
+  outFile    , o  Write the tree to file instead of stdout
+  pathList   , p  File containing paths to initially crawl
+  timeLimit  , t  The max number of seconds to run (default=120)
+  verbose    , v  Log info and progress to stdout
+```
+
+### Examples
+
+#### Crawl and print tree to stdout
+
+```
+$ h=/path/to/file web-tree-crawler <url>
+
+.com
+  .domain
+    .subdomain1
+      /foo
+        /bar
+      .subdomain-of-subdomain1
+        /baz
+          ?q=1
+    .subdomain2
+...
+```
+
+And to print an HTML tree...
+
+```
+$ f=html web-tree-crawler <url>
+
+...
+```
+
+#### Crawl and write tree to file
+
+```
+$ o=/path/to/file web-tree-crawler <url>
+
+Wrote tree to file!
+```
+
+#### Crawl with verbose logging
+
+```
+$ v=true web-tree-crawler <url>
+
+Visited "<url>"!
+Visited "<another-url>"!
+...
+```
+
 ## JS
 
 ### Usage
@@ -21,7 +83,6 @@ A naive web crawler that builds a tree of URLs using [web-tree](https://www.npmj
  * @param  {Object}   [opts.headers]           - headers to send with each request
  * @param  {Number}   [opts.numRequests = 200] - the number of requests to send at a time
  * @param  {String[]} [opts.startPaths]        - paths to initially crawl
- * @param  {Boolean}  [opts.stringify]         - stringify the tree
  * @param  {Number}   [opts.timeLimit = 120]   - the max number of seconds to run for
  * @param  {Boolean}  [opts.verbose]           - if true, logs info and progress to stdout
  * @param  {}         [opts....]               - additional options for #lib.request()
@@ -42,59 +103,15 @@ crawl(url, opts)
   .catch(err => { ... })
 ```
 
-## CLI
-
-### Usage
-
-```
-Usage: [option=] web-tree-crawler <url>
-
-Options:
-  cookies    , c  Cookies to send with each request
-  headers    , h  Headers to send with each request
-  numRequests, n  The number of requests to send at a time (default=200)
-  outFile    , o  Write the tree to file instead of stdout
-  pathList   , p  File containing paths to initially crawl
-  timeLimit  , t  The max number of seconds to run (default=120)
-  verbose    , v  Log info and progress to stdout
-```
-
-### Examples
-
-#### Crawl and print tree to stdout
-
-```
-$ cookies="chocolate=chip" web-tree-crawler <url>
-
-.com
-  .domain
-    .subdomain1
-      /foo
-        /bar
-      .subdomain-of-subdomain1
-        /baz
-          ?q=1
-    .subdomain2
-...
-```
-
-#### Crawl and write tree to file
-
-```
-$ headers="x-foo: bar" outFile=/path/to/file web-tree-crawler <url>
-
-Wrote tree to file!
-```
-
-## Test
+### Test
 
 `npm test`
 
-## Lint
+### Lint
 
 `npm run lint`
 
-## Documentation
+### Documentation
 
 `npm run doc`
 

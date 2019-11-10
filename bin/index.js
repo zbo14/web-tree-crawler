@@ -7,16 +7,16 @@ const crawler = require('./web-tree-crawler')
 const url = process.argv[2]
 
 const { env } = process
-const cookies = env.cookies || env.c
-const headers = env.headers || env.h
+const format = (env.format || env.f || '').trim()
+const headers = (env.headers || env.h || '').trim()
 const numRequests = +(env.numRequests || env.n)
-const outFile = env.outFile || env.o
-const pathList = env.pathList || env.p
+const outFile = (env.outFile || env.o || '').trim()
+const pathList = (env.pathList || env.p || '').trim()
 const timeLimit = +(env.timeLimit || env.t)
 const verbose = (env.verbose || env.v || '').trim() === 'true'
 
 crawler(url, {
-  cookies,
+  format,
   headers,
   numRequests,
   outFile,

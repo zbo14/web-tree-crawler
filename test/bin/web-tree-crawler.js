@@ -17,8 +17,8 @@ describe('bin/web-tree-crawler', () => {
     assert.strictEqual(result, [
       'Usage: [option=] web-tree-crawler <url>\n',
       'Options:',
-      '  cookies    , c  Cookies to send with each request',
-      '  headers    , h  Headers to send with each request',
+      '  format     , f  The output format of the tree (default="string")',
+      '  headers    , h  File containing headers to send with each request',
       '  numRequests, n  The number of requests to send at a time (default=200)',
       '  outFile    , o  Write the tree to file instead of stdout',
       '  pathList   , p  File containing paths to initially crawl',
@@ -36,8 +36,17 @@ describe('bin/web-tree-crawler', () => {
     }
   })
 
-  it('resolves tree', async () => {
-    const crawl = sinon.stub().resolves('tree')
+  it('rejects if format invalid', async () => {
+    try {
+      await this.crawler('https://foo.com', { format: 'fax' })
+      assert.fail('Should reject')
+    } catch ({ message }) {
+      assert.strictEqual(message, 'Invalid format: fax')
+    }
+  })
+
+  it('resolves string representation of tree', async () => {
+    const crawl = sinon.stub().resolves({ toString: () => 'tree' })
 
     this.crawler.__set__('crawl', crawl)
 
@@ -46,12 +55,23 @@ describe('bin/web-tree-crawler', () => {
     assert.strictEqual(tree, 'tree')
   })
 
-  it('processes headers', async () => {
-    const crawl = sinon.stub().resolves('tree')
+  it('resolves HTML representation of tree', async () => {
+    const crawl = sinon.stub().resolves({ toHTML: () => 'tree' })
 
     this.crawler.__set__('crawl', crawl)
 
-    const tree = await this.crawler('https://foo.com', { headers: 'x-foo: bar, x-baz: zab' })
+    const tree = await this.crawler('https://foo.com', { format: 'html' })
+
+    assert.strictEqual(tree, 'tree')
+  })
+
+  it('processes headers', async () => {
+    const crawl = sinon.stub().resolves({ toString: () => 'tree' })
+    const headers = path.join(__dirname, '..', 'fixtures', 'headers')
+
+    this.crawler.__set__('crawl', crawl)
+
+    const tree = await this.crawler('https://foo.com', { headers })
 
     assert.strictEqual(tree, 'tree')
 
@@ -59,18 +79,18 @@ describe('bin/web-tree-crawler', () => {
       headers: { 'x-foo': 'bar', 'x-baz': 'zab' },
       numRequests: undefined,
       startPaths: ['robots.txt', 'sitemap.xml'],
-      stringify: true,
       timeLimit: undefined,
       verbose: undefined
     })
   })
 
   it('doesn\'t process incomplete header', async () => {
-    const crawl = sinon.stub().resolves('tree')
+    const crawl = sinon.stub().resolves({ toString: () => 'tree' })
+    const headers = path.join(__dirname, '..', 'fixtures', 'bad-headers')
 
     this.crawler.__set__('crawl', crawl)
 
-    const tree = await this.crawler('https://foo.com', { headers: 'x-foo:' })
+    const tree = await this.crawler('https://foo.com', { headers })
 
     assert.strictEqual(tree, 'tree')
 
@@ -78,56 +98,14 @@ describe('bin/web-tree-crawler', () => {
       headers: {},
       numRequests: undefined,
       startPaths: ['robots.txt', 'sitemap.xml'],
-      stringify: true,
-      timeLimit: undefined,
-      verbose: undefined
-    })
-  })
-
-  it('process cookies', async () => {
-    const crawl = sinon.stub().resolves('tree')
-
-    this.crawler.__set__('crawl', crawl)
-
-    const tree = await this.crawler('https://foo.com', { cookies: 'chocolate=chip; oatmeal=raisin' })
-
-    assert.strictEqual(tree, 'tree')
-
-    sinon.assert.calledWithExactly(crawl, 'https://foo.com', {
-      headers: { cookie: ['chocolate=chip', 'oatmeal=raisin'] },
-      numRequests: undefined,
-      startPaths: ['robots.txt', 'sitemap.xml'],
-      stringify: true,
-      timeLimit: undefined,
-      verbose: undefined
-    })
-  })
-
-  it('process cookies and headers', async () => {
-    const crawl = sinon.stub().resolves('tree')
-
-    this.crawler.__set__('crawl', crawl)
-
-    const tree = await this.crawler('https://foo.com', {
-      cookies: 'chocolate=chip',
-      headers: 'Cookie: oatmeal=raisin'
-    })
-
-    assert.strictEqual(tree, 'tree')
-
-    sinon.assert.calledWithExactly(crawl, 'https://foo.com', {
-      headers: { cookie: ['chocolate=chip'] },
-      numRequests: undefined,
-      startPaths: ['robots.txt', 'sitemap.xml'],
-      stringify: true,
       timeLimit: undefined,
       verbose: undefined
     })
   })
 
   it('reads list of paths', async () => {
-    const crawl = sinon.stub().resolves('tree')
-    const pathList = path.join(__dirname, '..', 'fixtures', 'path-list.txt')
+    const crawl = sinon.stub().resolves({ toString: () => 'tree' })
+    const pathList = path.join(__dirname, '..', 'fixtures', 'path-list')
 
     this.crawler.__set__('crawl', crawl)
 
@@ -139,14 +117,13 @@ describe('bin/web-tree-crawler', () => {
       numRequests: undefined,
       headers: undefined,
       startPaths: ['foo', 'bar', 'baz'],
-      stringify: true,
       timeLimit: undefined,
       verbose: undefined
     })
   })
 
   it('reads list of paths', async () => {
-    const crawl = sinon.stub().resolves('tree')
+    const crawl = sinon.stub().resolves({ toString: () => 'tree' })
     const pathList = path.join(__dirname, '..', 'fixtures', 'not-here.txt')
 
     this.crawler.__set__('crawl', crawl)
@@ -160,7 +137,7 @@ describe('bin/web-tree-crawler', () => {
   })
 
   it('writes tree to file and resolves success message', async () => {
-    const crawl = sinon.stub().resolves('tree')
+    const crawl = sinon.stub().resolves({ toString: () => 'tree' })
 
     this.crawler.__set__('crawl', crawl)
 

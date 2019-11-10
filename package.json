@@ -16,7 +16,7 @@
   "author": "Zachary Balder",
   "license": "MIT",
   "dependencies": {
-    "web-tree": "2.0.0"
+    "web-tree": "2.2.0"
   },
   "devDependencies": {
     "eslint": "6.1.0",
