@@ -17,7 +17,7 @@ const usage = [
 ].join('\n')
 
 module.exports = async (url, {
-  format = 'string',
+  format,
   headers,
   numRequests,
   outFile,
@@ -27,7 +27,7 @@ module.exports = async (url, {
 } = {}) => {
   if (!url) return usage
 
-  if (format !== 'html' && format !== 'string') {
+  if (format && format !== 'html' && format !== 'string') {
     throw new Error('Invalid format: ' + format)
   }
 
@@ -38,9 +38,9 @@ module.exports = async (url, {
     headers = {}
 
     data.split('\n').filter(Boolean).forEach(line => {
-      let [name, value] = line.split(':')
+      let [name, ...rest] = line.split(':')
       name = name && name.trim().toLowerCase()
-      value = value && value.trim()
+      const value = rest.join(':').trim()
 
       if (name && value) {
         headers[name] = value
