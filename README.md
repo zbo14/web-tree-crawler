@@ -65,8 +65,8 @@ Wrote tree to file!
 ```
 $ v=true web-tree-crawler <url>
 
-Visited "<url>"!
-Visited "<another-url>"!
+Visited "<url>"
+Visited "<another-url>"
 ...
 ```
 

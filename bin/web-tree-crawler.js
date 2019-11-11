@@ -67,7 +67,25 @@ module.exports = async (url, {
     verbose
   })
 
-  const result = format === 'html' ? tree.toHTML() : tree.toString()
+  let result
+
+  if (format === 'html') {
+    result = [
+      '<!DOCTYPE html>',
+      '<html>',
+      '<head>',
+      `<title>${url}</title>`,
+      `<link rel="stylesheet" href="${path.join(__dirname, 'www', 'styles.css')}">`,
+      '</head>',
+      '<body>',
+      tree.toHTML(),
+      `<script src="${path.join(__dirname, 'www', 'index.js')}"></script>`,
+      '</body>',
+      '</html>'
+    ].join('\n')
+  } else {
+    result = tree.toString()
+  }
 
   if (!outFile) return result
 

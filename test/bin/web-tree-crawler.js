@@ -57,12 +57,25 @@ describe('bin/web-tree-crawler', () => {
 
   it('resolves HTML representation of tree', async () => {
     const crawl = sinon.stub().resolves({ toHTML: () => 'tree' })
+    const www = path.join(__dirname, '..', '..', 'bin', 'www')
 
     this.crawler.__set__('crawl', crawl)
 
     const tree = await this.crawler('https://foo.com', { format: 'html' })
 
-    assert.strictEqual(tree, 'tree')
+    assert.strictEqual(tree, [
+      '<!DOCTYPE html>',
+      '<html>',
+      '<head>',
+      '<title>https://foo.com</title>',
+      `<link rel="stylesheet" href="${path.join(www, 'styles.css')}">`,
+      '</head>',
+      '<body>',
+      'tree',
+      `<script src="${path.join(www, 'index.js')}"></script>`,
+      '</body>',
+      '</html>'
+    ].join('\n'))
   })
 
   it('processes headers', async () => {
