@@ -1,13 +1,14 @@
 'use strict'
 
 const fs = require('fs').promises
+const path = require('path')
 const crawl = require('../lib')
 
 const usage = [
   'Usage: [option=] web-tree-crawler <url>\n',
   'Options:',
-  '  cookies    , c  Cookies to send with each request',
-  '  headers    , h  Headers to send with each request',
+  '  format     , f  The output format of the tree (default="string")',
+  '  headers    , h  File containing headers to send with each request',
   '  numRequests, n  The number of requests to send at a time (default=200)',
   '  outFile    , o  Write the tree to file instead of stdout',
   '  pathList   , p  File containing paths to initially crawl',
@@ -16,7 +17,7 @@ const usage = [
 ].join('\n')
 
 module.exports = async (url, {
-  cookies,
+  format,
   headers,
   numRequests,
   outFile,
@@ -26,27 +27,25 @@ module.exports = async (url, {
 } = {}) => {
   if (!url) return usage
 
-  if (headers) {
-    headers = headers
-      .split(',')
-      .reduce((headers, header) => {
-        let [name, value] = header.split(':')
-        name = name && name.trim().toLowerCase()
-        value = value && value.trim()
-
-        if (name && value) {
-          headers[name] = value
-        }
-
-        return headers
-      }, {})
+  if (format && format !== 'html' && format !== 'string') {
+    throw new Error('Invalid format: ' + format)
   }
 
-  if (cookies) {
-    headers = headers || {}
-    headers.cookie = cookies
-      .split(';')
-      .map(cookie => cookie.trim())
+  if (headers) {
+    const filename = path.resolve(process.cwd(), headers)
+    const data = await fs.readFile(filename, 'utf8')
+
+    headers = {}
+
+    data.split('\n').filter(Boolean).forEach(line => {
+      let [name, ...rest] = line.split(':')
+      name = name && name.trim().toLowerCase()
+      const value = rest.join(':').trim()
+
+      if (name && value) {
+        headers[name] = value
+      }
+    })
   }
 
   let startPaths = ['robots.txt', 'sitemap.xml']
@@ -60,14 +59,33 @@ module.exports = async (url, {
     }
   }
 
-  const result = await crawl(url, {
+  const tree = await crawl(url, {
     headers,
     numRequests,
     startPaths,
-    stringify: true,
     timeLimit,
     verbose
   })
+
+  let result
+
+  if (format === 'html') {
+    result = [
+      '<!DOCTYPE html>',
+      '<html>',
+      '<head>',
+      `<title>${url}</title>`,
+      `<link rel="stylesheet" href="${path.join(__dirname, 'www', 'styles.css')}">`,
+      '</head>',
+      '<body>',
+      tree.toHTML(),
+      `<script src="${path.join(__dirname, 'www', 'index.js')}"></script>`,
+      '</body>',
+      '</html>'
+    ].join('\n')
+  } else {
+    result = tree.toString()
+  }
 
   if (!outFile) return result
 

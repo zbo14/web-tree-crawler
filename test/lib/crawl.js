@@ -23,7 +23,7 @@ const testSuite = verbose => {
       }
     })
 
-    it('mocks verbose crawling and URL parsing', async () => {
+    it('mocks crawling and URL parsing', async () => {
       const request = sinon.spy((url, opts) => {
         return new Promise((resolve, reject) => {
           let body = ''
@@ -96,7 +96,7 @@ const testSuite = verbose => {
       sinon.assert.calledWithExactly(request.getCall(4), 'https://baz.foo.com', { verbose })
     })
 
-    it('mocks crawling and URL parsing with timeout, resolves stringified result', async () => {
+    it('mocks crawling and URL parsing with timeout', async () => {
       const request = sinon.spy((url, opts) => {
         return new Promise((resolve, reject) => {
           let body = ''
@@ -125,10 +125,12 @@ const testSuite = verbose => {
 
       this.crawl.__set__('request', request)
 
-      const opts = { startPaths: ['mypath', '/mypath'], stringify: true, verbose }
+      const opts = { format: 'string', startPaths: ['mypath', '/mypath'], verbose }
       const result = await this.crawl('https://foo.com', opts)
 
-      assert.strictEqual(result, [
+      assert(result instanceof Tree)
+
+      assert.strictEqual(result.toString(), [
         '.com',
         '  .foo',
         '    /mypath',
