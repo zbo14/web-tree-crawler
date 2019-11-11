@@ -1,6 +1,6 @@
 {
   "name": "web-tree-crawler",
-  "version": "2.0.1",
+  "version": "3.0.0",
   "description": "A web crawler that builds a tree of URLs",
   "bin": "bin/index.js",
   "main": "lib/index.js",
