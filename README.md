@@ -1,8 +1,12 @@
 # web-tree-crawler
 
-A naive web crawler that builds a tree of URLs using [web-tree](https://www.npmjs.com/package/web-tree).
+A naive web crawler that builds a tree of URLs under a domain using [web-tree](https://www.npmjs.com/package/web-tree).
 
 **Note:** This software is intended for personal learning and testing purposes.
+
+## How it works
+
+You pass `web-tree-crawler` a URL and it tries to discover/visit as many URLs under that domain name as it can within a time limit. When time's up or it's run out of URLs, `web-tree-crawler` spits out a tree of URLs it visited. There are several configuration options - see the usage sections below.
 
 ## Install
 
