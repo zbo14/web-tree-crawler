@@ -62,7 +62,12 @@ describe('bin/web-tree-crawler', () => {
 
     this.crawler.__set__('crawl', crawl)
 
-    const tree = await this.crawler('https://foo.com', { format: 'html' })
+    await this.crawler('https://foo.com', { format: 'html' })
+
+    const treePath = path.join(process.cwd(), 'index.html')
+    const tree = await fs.readFile(treePath, 'utf8')
+
+    await fs.unlink(treePath)
 
     assert.strictEqual(tree, [
       '<!DOCTYPE html>',

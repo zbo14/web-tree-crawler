@@ -32,6 +32,10 @@ module.exports = async (url, {
     throw new Error('Invalid format: ' + format)
   }
 
+  if (format === 'html' && !outFile) {
+    outFile = path.join(process.cwd(), 'index.html')
+  }
+
   if (headers) {
     const filename = path.resolve(process.cwd(), headers)
     const data = await fs.readFile(filename, 'utf8')
