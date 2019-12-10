@@ -3,6 +3,7 @@
 const fs = require('fs').promises
 const path = require('path')
 const crawl = require('../lib')
+const defaultPaths = require('./start-paths')
 
 const usage = [
   'Usage: [option=] web-tree-crawler <url>\n',
@@ -48,7 +49,7 @@ module.exports = async (url, {
     })
   }
 
-  let startPaths = ['robots.txt', 'sitemap.xml']
+  let startPaths = defaultPaths
 
   if (pathList) {
     try {
