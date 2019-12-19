@@ -5,6 +5,7 @@ const fs = require('fs').promises
 const path = require('path')
 const rewire = require('rewire')
 const sinon = require('sinon')
+const startPaths = require('../../bin/start-paths')
 
 describe('bin/web-tree-crawler', () => {
   beforeEach(() => {
@@ -61,7 +62,12 @@ describe('bin/web-tree-crawler', () => {
 
     this.crawler.__set__('crawl', crawl)
 
-    const tree = await this.crawler('https://foo.com', { format: 'html' })
+    await this.crawler('https://foo.com', { format: 'html' })
+
+    const treePath = path.join(process.cwd(), 'index.html')
+    const tree = await fs.readFile(treePath, 'utf8')
+
+    await fs.unlink(treePath)
 
     assert.strictEqual(tree, [
       '<!DOCTYPE html>',
@@ -91,7 +97,7 @@ describe('bin/web-tree-crawler', () => {
     sinon.assert.calledWithExactly(crawl, 'https://foo.com', {
       headers: { 'x-foo': 'bar', 'x-baz': 'zab' },
       numRequests: undefined,
-      startPaths: ['robots.txt', 'sitemap.xml'],
+      startPaths,
       timeLimit: undefined,
       verbose: undefined
     })
@@ -110,7 +116,7 @@ describe('bin/web-tree-crawler', () => {
     sinon.assert.calledWithExactly(crawl, 'https://foo.com', {
       headers: {},
       numRequests: undefined,
-      startPaths: ['robots.txt', 'sitemap.xml'],
+      startPaths,
       timeLimit: undefined,
       verbose: undefined
     })

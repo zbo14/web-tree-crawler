@@ -3,6 +3,7 @@
 const fs = require('fs').promises
 const path = require('path')
 const crawl = require('../lib')
+const defaultPaths = require('./start-paths')
 
 const usage = [
   'Usage: [option=] web-tree-crawler <url>\n',
@@ -31,6 +32,10 @@ module.exports = async (url, {
     throw new Error('Invalid format: ' + format)
   }
 
+  if (format === 'html' && !outFile) {
+    outFile = path.join(process.cwd(), 'index.html')
+  }
+
   if (headers) {
     const filename = path.resolve(process.cwd(), headers)
     const data = await fs.readFile(filename, 'utf8')
@@ -48,7 +53,7 @@ module.exports = async (url, {
     })
   }
 
-  let startPaths = ['robots.txt', 'sitemap.xml']
+  let startPaths = defaultPaths
 
   if (pathList) {
     try {
